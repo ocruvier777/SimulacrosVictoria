@@ -23,10 +23,9 @@ export default function AuthProvider({ children }) {
     return data
   }, [])
 
+  // Efecto 1: solo rastrear estado de auth (sin queries a DB en el callback)
   useEffect(() => {
-    let ignore = false
-
-    // PKCE: exchange the code BEFORE setting up listeners (runs once, survives strict mode)
+    // PKCE: limpiar code de la URL antes de que React strict mode re-ejecute
     const params = new URLSearchParams(window.location.search)
     const code = params.get('code')
     if (code) {
@@ -47,42 +46,41 @@ export default function AuthProvider({ children }) {
         console.error('[Auth] getSession error:', sessionError.message)
       }
       console.log('[Auth] Initial session:', session?.user?.email ?? 'none')
-
-      if (ignore) return
-
       setUser(session?.user ?? null)
-      if (session?.user) {
-        const p = await fetchProfile(session.user.id)
-        if (!ignore) setProfile(p)
-      }
-      if (!ignore) setLoading(false)
+      if (!session?.user) setLoading(false)
     }
 
     initAuth()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         if (event === 'INITIAL_SESSION') return
         console.log('[Auth] State change:', event, session?.user?.email ?? 'none')
-
-        if (ignore) return
-
         setUser(session?.user ?? null)
-        if (session?.user) {
-          const p = await fetchProfile(session.user.id)
-          if (!ignore) setProfile(p)
-        } else {
+        if (!session?.user) {
           setProfile(null)
+          setLoading(false)
         }
-        setLoading(false)
       }
     )
 
-    return () => {
-      ignore = true
-      subscription.unsubscribe()
-    }
-  }, [fetchProfile])
+    return () => subscription.unsubscribe()
+  }, [])
+
+  // Efecto 2: cargar perfil cuando user cambia
+  useEffect(() => {
+    if (!user) return
+
+    let cancelled = false
+    fetchProfile(user.id).then((p) => {
+      if (cancelled) return
+      console.log('[Auth] Profile loaded:', p?.role ?? 'no profile')
+      setProfile(p)
+      setLoading(false)
+    })
+
+    return () => { cancelled = true }
+  }, [user, fetchProfile])
 
   const signIn = async (email, password) => {
     setError(null)
