@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import AuthProvider from './contexts/AuthContext'
+import { ProtectedRoute, AdminRoute } from './components/ProtectedRoute'
 import StudentLayout from './layouts/StudentLayout'
 import AdminLayout from './layouts/AdminLayout'
 import Login from './pages/Login'
@@ -22,19 +23,23 @@ export default function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/pricing" element={<Pricing />} />
 
-          {/* Rutas del alumno */}
-          <Route path="/" element={<StudentLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="onboarding" element={<Onboarding />} />
-            <Route path="exam/:examId" element={<ExamView />} />
-            <Route path="results/:sessionId" element={<Results />} />
-            <Route path="review/:sessionId" element={<Review />} />
+          {/* Rutas protegidas del alumno */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route element={<StudentLayout />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/exam/:examId" element={<ExamView />} />
+              <Route path="/results/:sessionId" element={<Results />} />
+              <Route path="/review/:sessionId" element={<Review />} />
+            </Route>
           </Route>
 
-          {/* Rutas del admin */}
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
+          {/* Rutas protegidas del admin */}
+          <Route element={<AdminRoute />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
