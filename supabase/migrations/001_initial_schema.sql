@@ -7,7 +7,7 @@
 -- Función trigger: updated_at automático
 -- ────────────────────────────────────────────────────────────
 CREATE OR REPLACE FUNCTION set_updated_at()
-RETURNS TRIGGER AS $$
+RET+URNS TRIGGER AS $$
 BEGIN
   NEW.updated_at = now();
   RETURN NEW;

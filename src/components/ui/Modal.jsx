@@ -6,6 +6,8 @@ const sizeClasses = {
   md: 'max-w-md',
   lg: 'max-w-lg',
   xl: 'max-w-xl',
+  '2xl': 'max-w-2xl',
+  '3xl': 'max-w-3xl',
 }
 
 export default function Modal({ open, onClose, title, children, size = 'md' }) {
@@ -27,9 +29,9 @@ export default function Modal({ open, onClose, title, children, size = 'md' }) {
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50 animate-fade-in" onClick={onClose} />
-      <div className={`relative bg-white rounded-lg shadow-xl w-full ${sizeClasses[size]} animate-slide-up`}>
+      <div className={`relative bg-white rounded-lg shadow-xl w-full ${sizeClasses[size]} max-h-[90vh] flex flex-col animate-slide-up`}>
         {title && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 flex-shrink-0">
             <h3 className="font-display font-bold text-lg text-text-main">{title}</h3>
             <button
               onClick={onClose}
@@ -41,7 +43,7 @@ export default function Modal({ open, onClose, title, children, size = 'md' }) {
             </button>
           </div>
         )}
-        <div className="px-6 py-4">{children}</div>
+        <div className="px-6 py-4 overflow-y-auto flex-1">{children}</div>
       </div>
     </div>,
     document.body

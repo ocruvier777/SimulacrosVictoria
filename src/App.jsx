@@ -16,6 +16,8 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 import Institutions from './pages/admin/Institutions'
 import InstitutionPrograms from './pages/admin/InstitutionPrograms'
 import ProgramSubjects from './pages/admin/ProgramSubjects'
+import Exams from './pages/admin/Exams'
+import Questions from './pages/admin/Questions'
 import AdminPlaceholder from './pages/admin/AdminPlaceholder'
 
 export default function App() {
@@ -48,8 +50,8 @@ export default function App() {
                 <Route path="institutions" element={<Institutions />} />
                 <Route path="institutions/:institutionId/programs" element={<InstitutionPrograms />} />
                 <Route path="institutions/:institutionId/programs/:programId/subjects" element={<ProgramSubjects />} />
-                <Route path="exams" element={<AdminPlaceholder title="Exámenes" />} />
-                <Route path="questions" element={<AdminPlaceholder title="Preguntas" />} />
+                <Route path="exams" element={<Exams />} />
+                <Route path="questions" element={<Questions />} />
                 <Route path="readings" element={<AdminPlaceholder title="Lecturas" />} />
                 <Route path="audios" element={<AdminPlaceholder title="Audios" />} />
                 <Route path="students" element={<AdminPlaceholder title="Alumnos" />} />
