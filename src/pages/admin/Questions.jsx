@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../../components/ui/Toast'
 import { renderLatex, stripLatex } from '../../lib/renderLatex'
@@ -850,7 +850,10 @@ export default function Questions() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-text-main mb-1">Lectura asociada</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-sm font-medium text-text-main">Lectura asociada</label>
+                    <Link to="/admin/readings" className="text-xs text-primary hover:underline">Gestionar lecturas</Link>
+                  </div>
                   <select
                     value={form.reading_id}
                     onChange={(e) => setForm((p) => ({ ...p, reading_id: e.target.value }))}
@@ -863,7 +866,10 @@ export default function Questions() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-text-main mb-1">Audio asociado</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-sm font-medium text-text-main">Audio asociado</label>
+                    <Link to="/admin/audios" className="text-xs text-primary hover:underline">Gestionar audios</Link>
+                  </div>
                   <select
                     value={form.audio_id}
                     onChange={(e) => setForm((p) => ({ ...p, audio_id: e.target.value }))}
